@@ -1,0 +1,61 @@
+package crawling;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.xml.XmlPage;
+
+public class ElevenMarketCrawler {
+	private WebClient webClient = null;
+	
+	// INITIALIZING webClient
+	private void init() {
+		webClient = new WebClient(BrowserVersion.CHROME);
+		webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+		webClient.getOptions().setThrowExceptionOnScriptError(false);
+		webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+		webClient.getOptions().setJavaScriptEnabled(true);
+		webClient.getOptions().setRedirectEnabled(true);
+		webClient.getCookieManager().setCookiesEnabled(true);
+		webClient.getOptions().setCssEnabled(false);
+		
+		webClient.waitForBackgroundJavaScript(1000);
+	}
+	
+	
+	
+	private void get11stAPI(int groundtruth, String category) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+		final int itemCount = 500;
+		final XmlPage page = webClient.getPage(정보가져올 페이지 입력);
+		//해당 속성들 list로 넣기
+
+		for (int i = 0; i < productNames.size(); i++) {
+		//반복문을 통해서 얻을 수 있음(get을 통해서)
+    System.out.println();
+			MysqlTable.add_item(name.asText(), price.asText(),seller.asText(),img.asText(), groundtruth);
+		}
+	}
+	
+	private void closePage() {
+		webClient.close();
+	}
+	
+	public static void main(String[] args) throws FailingHttpStatusCodeException, MalformedURLException, IOException  {
+		String[] categories = {카테고리별};
+		
+		MysqlTable.init_conn();
+		
+		ElevenMarketCrawler crawler = new ElevenMarketCrawler();
+		crawler.init();
+		for (int i = 0; i < categories.length; i++) {
+			crawler.get11stAPI(i, categories[i]);
+		}
+		crawler.closePage();
+	}
+}
