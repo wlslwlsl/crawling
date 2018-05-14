@@ -1,0 +1,57 @@
+package crawling;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.TreeSet;
+
+public class MysqlTable {
+	//database 정보 넣기
+  private static final String dbhost = "";
+	private static final String dbname = "";
+	private static final String dbuser = "";
+	private static final String dbpass = "";
+
+	private static final int numProducts = 10000;
+
+	private static Connection conn = null;
+	
+	// SET
+	private static PreparedStatement add_product_stmt = null;
+  
+ 	public static void init_conn() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection("jdbc:mysql://"+dbhost+"/"+dbname,dbuser,dbpass);
+		} catch (Exception e) {
+			System.err.print("Error: fail to load jdbc driver : "+e.getMessage());
+			System.exit(1);
+		}
+
+		// prepare statements
+		try {
+			// SET or ADD
+			add_product_stmt = conn.prepareStatement("INSERT INTO table명 (속성명) VALUES (?, ?, ?, ?, ?)");
+      } catch (SQLException e) {
+			System.err.println("Error: fail to prepare statement: "+e.getMessage());
+			System.exit(1);
+		}
+	}
+		public static void add_item(String title, String price, String seller, String imgsrc, int groundtruth) {
+		int iPrice = Integer.parseInt(price);
+
+		try {
+    //속성 값 
+			add_product_stmt.setString(1, ?);
+			...
+			add_product_stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("add_product: "+e.getMessage());
+		}
+	}
+
+
+}
